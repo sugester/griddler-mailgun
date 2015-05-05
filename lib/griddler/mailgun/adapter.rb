@@ -13,7 +13,7 @@ module Griddler
       end
 
       def normalize_params
-        {
+        h = {
           to: to_recipients,
           cc: cc_recipients,
           bcc: Array.wrap(param_or_header(:Bcc)),
@@ -24,6 +24,30 @@ module Griddler
           attachments: attachment_files,
           headers: serialized_headers
         }
+        if !params[:recipient].blank?
+          h[:recipient] = Griddler::EmailParser.parse_address(params[:recipient])
+        end
+        if !params['content-id-map'].blank?
+          map = {}
+          list = JSON.parse(params['content-id-map'])
+          list.each do |k, v|
+            if v.to_s.include?('-')
+              index = v.split('-')[1].to_i - 1
+              key = k.to_s.sub('<', '').sub('>', '')
+              map[index] = key
+            end
+          end
+          h[:content_id_map] = map
+        end
+        return h        
+      end
+
+      def recipient
+        params[:recipient]
+      end
+
+      def content_id_map
+        params[:content_id_map]
       end
 
     private
