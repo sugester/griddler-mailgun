@@ -36,12 +36,12 @@ module Griddler
       def to_recipients
         to_emails = param_or_header(:To)
         to_emails ||= params[:recipient]
-        to_emails.split(',').map(&:strip)
+        to_emails.to_s.split(',').map(&:strip)
       end
 
       def cc_recipients
         cc = param_or_header(:Cc) || ''
-        cc.split(',').map(&:strip)
+        cc.to_s.split(',').map(&:strip)
       end
 
       def headers
