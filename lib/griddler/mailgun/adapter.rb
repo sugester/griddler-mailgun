@@ -42,14 +42,6 @@ module Griddler
         return h        
       end
 
-      def recipient
-        params[:recipient]
-      end
-
-      def content_id_map
-        params[:content_id_map]
-      end
-
     private
 
       def determine_sender
